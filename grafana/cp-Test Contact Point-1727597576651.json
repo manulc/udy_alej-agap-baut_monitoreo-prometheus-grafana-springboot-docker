@@ -1,0 +1,1 @@
+{"apiVersion":1,"contactPoints":[{"orgId":1,"name":"Test Contact Point","receivers":[{"uid":"fdz5kx5j6bbb5b","type":"webhook","settings":{"httpMethod":"POST","url":"http://host.docker.internal:8080/alerts"},"disableResolveMessage":false}]}]}

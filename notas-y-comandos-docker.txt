@@ -1,0 +1,68 @@
+-- Prometheus
+
+docker pull prom/prometheus:v2.54.1
+docker container run --detach --name prometheus-v2.54.1 -p 9090:9090 prom/prometheus:v2.54.1
+- Si queremos aplicar un archivo de configuración personalizado de Prometheus:
+docker container run -d --name prometheus-v2.54.1 -p 9090:9090 -v ${pwd}/prometheus.yaml:/etc/prometheus/prometheus.yml prom/prometheus:v2.54.1
+
+docker container stop prometheus-v2.54.1
+docker container remove prometheus-v2.54.1
+
+Prometheus nos permite hacer scraping de las métricas que expone nuestra aplicación Api Rest y podemos visualizar esas métricas en paneles con gráficas.
+También podemos aplicar funciones como "rate"(Ratio o Tasa -> divide un valor entre un periodo determinado tiempo. Por ejemplo, num_peticiones_http/1m) o
+"increase"(cuenta valores en un periodo determinado de tiempo. Por ejemplo, num_peticiones_http en 5min) a esa métricas y realizar agrupaciones usando
+los tags o etiquestas de las métricas.
+Además, también podemos crear alertas sobre métricas.
+
+Por ejemplo:
+La métrica "test_timer_metric_seconds_count" cuenta el número de peticiones http(ya que se incrementa en un método handler de un controlador).
+rate(test_timer_metric_seconds_count[5m]) -> Calcular el ratio o la tasa del número de peticiones http por 5 min(num_peticiones_http/5min).
+increase(test_timer_metric_seconds_count[1m]) -> Calcular el número de peticiones http que se hicieron durante 1 min.
+sum(increase(test_timed_annotation_metric_seconds_count[5m]))by(status) -> Calcula las sumas del número de peticiones http que se hicieron en 1m agrupándolas por el código de la respuesta http.
+increase(http_server_requests_seconds_count{uri="/users/{userId}"}[1m]) -> Calcula el número de peticiones http que se hicieron en 1 min al endpoint "/users/{userId}" ("uri" es un tag de la métrica).
+increase(http_server_requests_seconds_count{uri="/users/{userId}", status = "404"}[1m]) -> Misma métrica que la anterior pero, además, se filtra por aquellas peticiones http con código de respuesta 404 ("status" es otro tag de la métrica).
+
+Los paneles con gráficas de Prometheus son más limitados que los paneles con gráficas de Grafana. Por esta razón, se suele combinar Grafana con Prometheus.
+
+* PushGateway
+PushGateway es una herramienta de Prometheus que permite obtener y publicar métricas de aplicaciones que no son de tipo web (Por ejemplo, aplicaciones de escritorio, o aplicaciones batch)
+, es decir, aplicaciones a las que no se le puede hacer scraping directamente.
+PushGateway se situa entre la aplicación y Prometheus y, de esta forma, PushGateway obtiene las métricas de la aplicación y Prometheus hace scraping del PushGateway.
+El PushGateway expone las métricas con el formato de Prometheus en el endpoint "http://host_push_gateway:port/metrics". Por lo tanto, hay que configurar Prometheus con este endpoint
+para que pueda hacer scraping de esas métricas.
+
+docker pull prom/pushgateway:v1.10.0
+docker container run -d --name prom-push-gateway-v1.10.0 -p 9091:9091 prom/pushgateway:v1.10.0
+
+-- Grafana
+
+docker pull grafana/grafana:11.2.0
+docker run -d --name=grafana-v11.2.0 -p 3000:3000 grafana/grafana (las credenciales por defecto son admin:admin)
+
+Grafana hace scraping a Prometheus para obtener las métricas y mostrarlas en sus paneles con gráficas.
+Podemos añadir las mismas funciones y agrupaciones por tags que Prometheus a las métricas que Prometheus para visualizarlas en gráficas de Grafana.
+
+Tenemso que configurar un Data Source o Fuente de Datos para indicar a Grafana de dónde tiene que realizar el scraping de métricas.
+
+Por ejemplo, en nuestro caso configuramos un Data Source de tipo Prometheus con la url "http://host.docker.internal:9090" (Siempre que el contenedor de Prometheus tenga el puerto 9090 abierto con la máquina que ejecuta Docker). Nota: Usamos el host "host.docker.internal" para la comunicación desde Docker con la máquina exterior que ejecuta Docker.
+
+Grafana nos permite importar Dashboards(Paneles con gráficas) usando un Json con los datos del Dashboard a importar o usando un identificador del Dashboard.
+En la web de Grafana(www.grafana.com) existen Dashboards creador por otras personas que podemos importar a nuestro Grafana a través de un Json o un identificador.
+Por ejemplo, si queremos visualizar en gráficas de Grafana las métricas expuestas por una aplicación Api Rest hecho con Spring Boot, en la web de Grafana ya existe un Dashboard
+con gráficas para este tipo de aplicaciones que podemos importar.
+En nuestro caso, hemos importado el Dashboard "Spring Boot 2.1 Statistics" con id "10280" desde la web de Grafana que viene con paneles con graficas para las estadísticas generales
+de la aplicación, para el uso la memoria de la JVM, para el uso de la CPU de la JVM, para las conexiones con la base de datos(HikariCP), para las peticiones http, para las
+estadísticas del servidor Tomcat, para log logs generados, etc..
+A los Dashboards importados también podemos añadirles nuestros paneles personalizados.
+
+* Aleras:
+Podemos generar alertas sobre alguna métrica.
+Para ello, primero podemos crear canales (Channels) para enviar las notificaciones de las alertas (En versiones más modernas de Grafana, la sección de Canales o Channels ahora se llama
+Puntos de Contactos o Contact Points). Estos Canales o Puntos de Contacto puede ser de varios tipos, como por ejemplo, puede ser de tipo email (envía la notificación a un correo),
+webhook (envía la notificación a un endpoint de nuestra aplicación), Slack, etc...
+Por ejemplo, en nuestro caso hemos configurado un Canal o Punto de Contacto de tipo webhook hacia el endoint de nuestra aplicación "/alerts" mediante peticiones http POST. Dicho endpoint
+recibe un mensaje, a través del cuerpo de la petición http, que será el mensaje de la alerta generado por Grafana.
+Los Canales o Puntos de Contacto se integran en las alertas cuando se configuran.
+En nuestro caso, hemos configurado una alerta para la métrica 'increase(http_server_requests_seconds_count{uri="/users/{userId}", status = "404"}[1m])' con evaluaciones cada 1m y con un
+periodo de 1m para el envio de las alertas. En esta alerta se evalua que el valor medio de la métrica indicada sea mayor a 50 y, en caso afirmativo, se envía una alerta cada 1m, al Canal
+o Punto de Contacto configurado en esa alerta, hasta que dicho valor sea menor a 50.

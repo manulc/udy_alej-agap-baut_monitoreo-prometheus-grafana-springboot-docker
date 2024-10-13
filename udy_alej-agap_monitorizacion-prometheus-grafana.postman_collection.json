@@ -1,0 +1,580 @@
+{
+	"info": {
+		"_postman_id": "b6f1fa6d-e5f7-4095-9cdc-fdbd4b47d851",
+		"name": "udy_alej-agap_monitorizacion-prometheus-grafana",
+		"description": "Udemy - Monitoreo con Prometheus, Grafana, Spring boot y Docker (Alej. Agap. Baut.)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27225444"
+	},
+	"item": [
+		{
+			"name": "Metrics",
+			"item": [
+				{
+					"name": "Metrics - Métrica Counter",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/metrics/counter",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"metrics",
+								"counter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Metrics - Métrica Timer",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/metrics/timer",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"metrics",
+								"timer"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Metrics  - Métrica Timed Annotation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Los scripts de Postman se escriben con JavaScript\r",
+									"\r",
+									"// test que verifica que el estado de la respuesta http sea 200(OK)\r",
+									"pm.test(\"Status check test\", function() {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/metrics/timed-annotation",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"metrics",
+								"timed-annotation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Metrics - Métricas Actuator",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/actuator/metrics",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"actuator",
+								"metrics"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Metrics - Métrica Actuator - Timed Annotation Metric",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/actuator/metrics/test.timed.annotation.metric",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"actuator",
+								"metrics",
+								"test.timed.annotation.metric"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Metrics - Actuator Prometheus",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/actuator/prometheus",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"actuator",
+								"prometheus"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Users - Obtener usuarios",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Los scripts de Postman se escriben con JavaScript\r",
+									"\r",
+									"// test que verifica que el estado de la respuesta http sea 200(OK)\r",
+									"pm.test(\"Status check test\", function() {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/users",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Users - Obtener usuario por id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Los scripts de Postman se escriben con JavaScript\r",
+									"\r",
+									"// test que verifica que el estado de la respuesta http sea 200(OK)\r",
+									"pm.test(\"Status check test\", function() {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Los scripts de Postman se escriben con JavaScript.\r",
+									"\r",
+									"// Genermoas un id de usuario aleatoriamente.\r",
+									"const randomId = Math.floor(Math.random() * 500);\r",
+									"\r",
+									"// Establecemos el id de usuario generado aleatoriamente en la variable \"userId\" creada\r",
+									"// previamente a nivel de la colección.\r",
+									"pm.collectionVariables.set(\"userId\", randomId);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/users/{{userId}}",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Users - Obtener usuario por username",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Los scripts de Postman se escriben con JavaScript\r",
+									"\r",
+									"// test que verifica que el estado de la respuesta http sea 200(OK)\r",
+									"pm.test(\"Status check test\", function() {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/users/username/bernard.schaden",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"username",
+								"bernard.schaden"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Users - Obtener usernames",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Los scripts de Postman se escriben con JavaScript\r",
+									"\r",
+									"// test que verifica que el estado de la respuesta http sea 200(OK)\r",
+									"pm.test(\"Status check test\", function() {\r",
+									"    pm.response.to.have.status(200);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/users/usernames",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"usernames"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Users - Eliminar usuario por username",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Los scripts de Postman se escriben con JavaScript\r",
+									"\r",
+									"// test que verifica que el estado de la respuesta http sea 204(NO_CONTENT)\r",
+									"pm.test(\"Status check test\", function() {\r",
+									"    pm.response.to.have.status(204);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Los scripts de Postman se escriben con JavaScript\r",
+									"\r",
+									"/* Nota: Como los datos de los usuarios se generan aleatoriamente cuando se inicia la\r",
+									"   aplicación, a priori no tenemos un username de usuario para probar este endpoint.\r",
+									"   Por tanto, antes de ejecutar este endpoint, ejecutamos este script para obtener\r",
+									"   el username del usuario con id 1 y establecerlos en la variable \"username\".\r",
+									"   Esta variable se utilizará en la url de este endpoint. */\r",
+									"\r",
+									"// Genermoas un id de usuario aleatoriamente.\r",
+									"const randomId = Math.floor(Math.random() * 500);\r",
+									"\r",
+									"// Realizamos esta petición http para obtener los datos del usuario con id 1.\r",
+									"pm.sendRequest(\"http://localhost:8080/users/\" + randomId, function(err, response) {\r",
+									"    console.log(response.json());\r",
+									"\r",
+									"    // Obtenemos la respuesta http.\r",
+									"    const bodyResponse = response.json();\r",
+									"    // Establecemos en la variable \"username\", que hemos creado a nivel de colección,\r",
+									"    // el username del usuario de la respuesta http.\r",
+									"    pm.collectionVariables.set(\"username\", bodyResponse.username);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/users/{{username}}",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"{{username}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Users - Autenticar usuario",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Los scripts de Postman se escriben con JavaScript\r",
+									"\r",
+									"// test que verifica que el estado de la respuesta http sea 200(OK)\r",
+									"pm.test(\"Status check test\", function() {\r",
+									"    pm.response.to.have.status(200);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Los scripts de Postman se escriben con JavaScript\r",
+									"\r",
+									"/* Nota: Como los datos de los usuarios se generan aleatoriamente cuando se inicia la\r",
+									"   aplicación, a priori no tenemos datos de usuario para probar este endpoint.\r",
+									"   Por tanto, antes de ejecutar este endpoint, ejecutamos este script para obtener\r",
+									"   los datos del usuario con id 1 y establecerlos en la variable \"user\". Esta variable\r",
+									"   se utilizará como body de la petición http de este endpoint. */\r",
+									"\r",
+									"\r",
+									"// Realizamos esta petición http para obtener los datos del usuario con id 1.\r",
+									"pm.sendRequest(\"http://localhost:8080/users/1\", function(err, response) {\r",
+									"    console.log(response.json());\r",
+									"\r",
+									"    // Establecemos en la variable \"user\", que hemos creado a nivel de colección,\r",
+									"    // la respuesta http en formato texto.\r",
+									"    pm.collectionVariables.set(\"user\", response.text());\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{{user}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/users",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Users - Métricas Actuator",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/actuator/metrics",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"actuator",
+								"metrics"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Users - Actuator Prometheus",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/actuator/prometheus",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"actuator",
+								"prometheus"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Users - Enviar alerta",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "Alert Example",
+							"options": {
+								"raw": {
+									"language": "text"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/alerts",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"alerts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Users - Métricas Actuator - Peticiones Http  - URI Alertas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/actuator/metrics/http.server.requests?tag=uri:/alerts",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"actuator",
+								"metrics",
+								"http.server.requests"
+							],
+							"query": [
+								{
+									"key": "tag",
+									"value": "uri:/alerts"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "user",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "username",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "userId",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
